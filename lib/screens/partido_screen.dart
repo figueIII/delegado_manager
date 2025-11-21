@@ -391,14 +391,14 @@ class _ThemePanel extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: alineacion == CrossAxisAlignment.start 
                     ? [
-                        Flexible(child: Text("${j.dorsal}. ${j.nombre}", overflow: TextOverflow.ellipsis, style: TextStyle(color: textColor.withOpacity(0.9), fontWeight: FontWeight.w300))),
-                        // AQUI QUITAMOS EL TIEMPO
-                        // Text(j.tiempoFormateado, style: TextStyle(color: color, fontFamily: 'Courier', fontSize: 18, fontWeight: FontWeight.bold)),
+                        // IZQUIERDA: Nombre y Dorsal
+                        Flexible(child: Text("#${j.dorsal} ${j.nombre}", overflow: TextOverflow.ellipsis, style: TextStyle(color: textColor.withOpacity(0.9), fontWeight: FontWeight.w300))),
+                        Text(j.tiempoFormateado, style: TextStyle(color: color, fontFamily: 'Courier', fontSize: 18, fontWeight: FontWeight.bold)),
                       ]
                     : [
-                        // AQUI QUITAMOS EL TIEMPO
-                        // Text(j.tiempoFormateado, style: TextStyle(color: color, fontFamily: 'Courier', fontSize: 18, fontWeight: FontWeight.bold)),
-                        Flexible(child: Text("${j.dorsal}. ${j.nombre}", overflow: TextOverflow.ellipsis, style: TextStyle(color: textColor.withOpacity(0.6), fontWeight: FontWeight.w300))),
+                        // DERECHA: Tiempo y Nombre
+                        Text(j.tiempoFormateado, style: TextStyle(color: color, fontFamily: 'Courier', fontSize: 18, fontWeight: FontWeight.bold)),
+                        Flexible(child: Text("${j.nombre} #${j.dorsal}", overflow: TextOverflow.ellipsis, style: TextStyle(color: textColor.withOpacity(0.6), fontWeight: FontWeight.w300))),
                       ],
                 ),
               );

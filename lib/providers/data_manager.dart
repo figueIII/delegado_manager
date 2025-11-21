@@ -7,7 +7,11 @@ import '../models/game_theme.dart';
 
 class DataManager extends ChangeNotifier {
   GameTheme temaActual = GameTheme.cyberpunk;
-  
+  // Método para guardar cambios tras editar un jugador (Nombre, Dorsal, etc.)
+  void actualizarJugador() {
+    _guardarDatos();
+    notifyListeners();
+  }
   // CONFIGURACIÓN DE REGLAS (Ajustes)
   int minFormacionRequeridos = 4; // Valor por defecto, editable en Ajustes
 
@@ -40,8 +44,9 @@ class DataManager extends ChangeNotifier {
 
     // Regla World Rugby (1a Línea según tamaño convocatoria)
     int min1a = 0;
-    if (total <= 18) min1a = 3; // Mínimo para jugar con melés
-    else if (total <= 22) min1a = 5;
+    if (total <= 18) {
+      min1a = 3; // Mínimo para jugar con melés
+    } else if (total <= 22) min1a = 5;
     else if (total == 23) min1a = 6;
 
     if (primerasLineas < min1a) {
@@ -138,12 +143,20 @@ class DataManager extends ChangeNotifier {
   void agregarJugador(Jugador j) { plantilla.add(j); _guardarDatos(); notifyListeners(); }
   void eliminarJugador(Jugador j) { plantilla.remove(j); _guardarDatos(); notifyListeners(); }
   void toggleConvocado(Jugador j) { 
-    if(convocados.contains(j)) convocados.remove(j); else convocados.add(j); 
+    if(convocados.contains(j)) {
+      convocados.remove(j);
+    } else {
+      convocados.add(j);
+    } 
     notifyListeners(); 
   }
   void limpiarConvocados() { convocados.clear(); notifyListeners(); }
   void toggleTitular(Jugador j) {
-    if(titulares.contains(j)) titulares.remove(j); else titulares.add(j);
+    if(titulares.contains(j)) {
+      titulares.remove(j);
+    } else {
+      titulares.add(j);
+    }
     notifyListeners();
   }
   void iniciarPartidoLogica() {
@@ -156,7 +169,9 @@ class DataManager extends ChangeNotifier {
     if (relojCorriendo) {
       _timerPartido = Timer.periodic(const Duration(seconds: 1), (t) {
         segundosPartido++;
-        for (var j in titulares) j.segundosJugados++;
+        for (var j in titulares) {
+          j.segundosJugados++;
+        }
         if(segundosPartido % 5 == 0) _guardarDatos();
         notifyListeners();
       });
@@ -164,12 +179,18 @@ class DataManager extends ChangeNotifier {
     notifyListeners();
   }
   void cambiarPuntos(bool esBUC, int v) { 
-    if(esBUC) puntosBUC += v; else puntosRival += v; 
+    if(esBUC) {
+      puntosBUC += v;
+    } else {
+      puntosRival += v;
+    } 
     if(puntosBUC < 0) puntosBUC = 0; if(puntosRival < 0) puntosRival = 0;
     notifyListeners(); 
   }
   void reiniciarTiempoPartido() { segundosPartido = 0; _guardarDatos(); notifyListeners(); }
-  void reiniciarTiemposJugadores() { for(var j in plantilla) j.segundosJugados = 0; _guardarDatos(); notifyListeners(); }
+  void reiniciarTiemposJugadores() { for(var j in plantilla) {
+    j.segundosJugados = 0;
+  } _guardarDatos(); notifyListeners(); }
   void finalizarPartido() { 
     _timerPartido?.cancel(); relojCorriendo = false; 
     titulares.clear(); suplentes.clear(); convocados.clear(); 

@@ -44,7 +44,7 @@ class ElegirTitularesScreen extends StatelessWidget {
                         color: esTitular ? tema.colorPositivo : Colors.transparent, 
                         width: 4
                       ),
-                      bottom: BorderSide(color: Colors.white10)
+                      bottom: const BorderSide(color: Colors.white10)
                     ),
                   ),
                   child: ListTile(

@@ -82,7 +82,7 @@ class InicioScreen extends StatelessWidget {
                     final isSelected = t.id == data.temaActual.id;
                     return ListTile(
                       leading: CircleAvatar(backgroundColor: t.colorPositivo),
-                      title: Text(t.nombre, style: TextStyle(color: Colors.white)),
+                      title: Text(t.nombre, style: const TextStyle(color: Colors.white)),
                       trailing: isSelected ? Icon(Icons.check, color: t.colorPositivo) : null,
                       onTap: () {
                         data.cambiarTema(t);

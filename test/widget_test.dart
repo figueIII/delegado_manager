@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 // IMPORTANTE: Asegúrate de que este nombre coincida con el 'name:' de tu archivo pubspec.yaml
 // Si en tu pubspec.yaml dice "name: gestion_trobada", cambia la línea de abajo a:

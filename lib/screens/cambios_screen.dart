@@ -67,7 +67,7 @@ class _CambiosScreenState extends State<CambiosScreen> {
                             return ListTile(
                               leading: Text("${j.dorsal}", style: TextStyle(color: tema.colorNegativo, fontWeight: FontWeight.bold)),
                               title: Text(j.nombre, style: TextStyle(color: tema.textoPrincipal)),
-                              subtitle: Text(j.etiquetas, style: TextStyle(color: Colors.grey, fontSize: 10)),
+                              subtitle: Text(j.etiquetas, style: const TextStyle(color: Colors.grey, fontSize: 10)),
                               tileColor: isSelected ? tema.colorNegativo.withOpacity(0.3) : null,
                               onTap: () => setState(() { titularSeleccionado = j; suplenteSeleccionado = null; }),
                             );
@@ -106,7 +106,7 @@ class _CambiosScreenState extends State<CambiosScreen> {
                               child: ListTile(
                                 leading: Text("${j.dorsal}", style: TextStyle(color: tema.colorPositivo, fontWeight: FontWeight.bold)),
                                 title: Text(j.nombre, style: TextStyle(color: tema.textoPrincipal)),
-                                subtitle: Text(j.etiquetas, style: TextStyle(color: Colors.grey, fontSize: 10)),
+                                subtitle: Text(j.etiquetas, style: const TextStyle(color: Colors.grey, fontSize: 10)),
                                 tileColor: isSelected 
                                     ? tema.colorPositivo.withOpacity(0.3) 
                                     : (esValido && titularSeleccionado != null) 

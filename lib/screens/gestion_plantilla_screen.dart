@@ -12,7 +12,7 @@ class GestionPlantillaScreen extends StatefulWidget {
 
 class _GestionPlantillaScreenState extends State<GestionPlantillaScreen> {
   final _nameController = TextEditingController();
-  bool _esFormacion = false; // Solo queda Formación
+  bool _esFormacion = false; 
   bool _sortAsc = true;
 
   @override
@@ -66,14 +66,32 @@ class _GestionPlantillaScreenState extends State<GestionPlantillaScreen> {
                   const SizedBox(height: 10),
                   Row(
                     children: [
-                      // Solo Formación (F)
+                      // ARREGLO VISUAL DEL BOTÓN FORMACIÓN (NEGRO SI NO PULSADO)
                       FilterChip(
                         label: const Text("FORMACIÓN (F)"),
                         selected: _esFormacion,
                         onSelected: (v) => setState(() => _esFormacion = v),
                         checkmarkColor: tema.bgPrincipal,
+                        
+                        // ESTADO SELECCIONADO (Pulsado)
                         selectedColor: Colors.orangeAccent,
-                        labelStyle: TextStyle(color: _esFormacion ? tema.bgPrincipal : tema.textoPrincipal),
+                        
+                        // ESTADO NO SELECCIONADO (Sin pulsar)
+                        backgroundColor: Colors.transparent, 
+                        
+                        // Borde: Naranja si pulsado, Color Texto Principal si no
+                        side: BorderSide(
+                          color: _esFormacion ? Colors.transparent : tema.textoPrincipal.withOpacity(0.5)
+                        ),
+                        
+                        // Texto: Color fondo si pulsado, NEGRO (o contraste fuerte) si no
+                        labelStyle: TextStyle(
+                          // Aquí forzamos el color del texto no seleccionado
+                          // Si quieres que se vea siempre bien, usa el color del texto principal del tema
+                          // Si el tema es oscuro, el texto será blanco. Si es claro, será negro.
+                          color: _esFormacion ? tema.bgPrincipal : tema.textoPrincipal,
+                          fontWeight: _esFormacion ? FontWeight.bold : FontWeight.normal
+                        ),
                       ),
                       const Spacer(),
                       ElevatedButton(
@@ -83,7 +101,7 @@ class _GestionPlantillaScreenState extends State<GestionPlantillaScreen> {
                             final nuevo = Jugador(
                               nombre: _nameController.text,
                               dorsal: 0, 
-                              esPrimeraLinea: false, // Por defecto false, se pone en convocatoria
+                              esPrimeraLinea: false, 
                               esFormacion: _esFormacion,
                             );
                             data.agregarJugador(nuevo);
@@ -108,11 +126,10 @@ class _GestionPlantillaScreenState extends State<GestionPlantillaScreen> {
                   final j = listaOrdenada[index];
                   return ListTile(
                     title: Text(j.nombre, style: TextStyle(color: tema.textoPrincipal)),
-                    // Mostramos si es F en el subtítulo
                     subtitle: j.esFormacion 
-                        ? Text("Formación (F)", style: TextStyle(color: Colors.orangeAccent, fontSize: 12))
+                        ? const Text("Formación (F)", style: TextStyle(color: Colors.orangeAccent, fontSize: 12))
                         : null,
-                    trailing: Icon(Icons.edit, color: Colors.grey, size: 20),
+                    trailing: const Icon(Icons.edit, color: Colors.grey, size: 20),
                     onTap: () => _mostrarDialogoEdicion(context, j, data, tema),
                   );
                 },
@@ -141,16 +158,24 @@ class _GestionPlantillaScreenState extends State<GestionPlantillaScreen> {
                 TextField(
                   controller: nameCtrl,
                   style: TextStyle(color: tema.textoPrincipal),
-                  decoration: InputDecoration(labelText: "Nombre", labelStyle: TextStyle(color: Colors.grey)),
+                  decoration: const InputDecoration(labelText: "Nombre", labelStyle: TextStyle(color: Colors.grey)),
                 ),
                 const SizedBox(height: 20),
                 Row(
                   children: [
+                    // Mismo arreglo visual en el diálogo
                     FilterChip(
                       label: const Text("Formación (F)"),
                       selected: esF,
                       onSelected: (v) => setStateDlg(() => esF = v),
+                      checkmarkColor: tema.bgPrincipal,
                       selectedColor: Colors.orangeAccent,
+                      backgroundColor: Colors.transparent,
+                      side: BorderSide(color: esF ? Colors.transparent : tema.textoPrincipal.withOpacity(0.5)),
+                      labelStyle: TextStyle(
+                        color: esF ? tema.bgPrincipal : tema.textoPrincipal,
+                        fontWeight: esF ? FontWeight.bold : FontWeight.normal
+                      ),
                     ),
                   ],
                 )

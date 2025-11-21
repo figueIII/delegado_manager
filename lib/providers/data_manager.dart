@@ -34,6 +34,7 @@ class DataManager extends ChangeNotifier {
   // --- VALIDACIONES DE REGLAS (EL CEREBRO DEL DELEGADO) ---
 
   // 1. Validar CONVOCATORIA (Lista de 23)
+  // 1. Validar CONVOCATORIA (Lista de 23)
   String? validarReglasConvocatoria() {
     int total = convocados.length;
     int primerasLineas = convocados.where((j) => j.esPrimeraLinea).length;
@@ -42,15 +43,20 @@ class DataManager extends ChangeNotifier {
     // Regla de Tamaño
     if (total > 23) return "ALERTA: Demasiados jugadores. Máximo 23.";
 
-    // Regla World Rugby (1a Línea según tamaño convocatoria)
+    // --- REGLA DE ORO DE LA PRIMERA LÍNEA (World Rugby) ---
     int min1a = 0;
-    if (total <= 18) {
-      min1a = 3; // Mínimo para jugar con melés
-    } else if (total <= 22) min1a = 5;
+    
+    // Si convocas 15 o menos -> Necesitas 3 primeras líneas (para empezar)
+    if (total <= 15) min1a = 3; 
+    // Si convocas 16, 17 o 18 -> Necesitas 4 primeras líneas
+    else if (total <= 18) min1a = 4;
+    // Si convocas 19, 20, 21 o 22 -> Necesitas 5 primeras líneas
+    else if (total <= 22) min1a = 5;
+    // Si convocas 23 -> Necesitas 6 primeras líneas (obligatorio tener recambio completo)
     else if (total == 23) min1a = 6;
 
     if (primerasLineas < min1a) {
-      return "ALERTA 1a LINEA: Para $total convocados, necesitas $min1a primeras líneas (tienes $primerasLineas).";
+      return "ALERTA 1a LÍNEA: Con $total jugadores convocados, el reglamento exige tener al menos $min1a primeras líneas. Tienes $primerasLineas.";
     }
 
     // Regla de Formación (Slider)
@@ -60,7 +66,6 @@ class DataManager extends ChangeNotifier {
 
     return null; // Todo OK
   }
-
   // 2. Validar XV INICIAL
   String? validarReglasTitulares() {
     int primeras = titulares.where((j) => j.esPrimeraLinea).length;

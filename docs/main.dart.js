@@ -80669,10 +80669,11 @@ return B.b.bK(s," | ")}}
 A.iv.prototype={
 anv(){var s,r=this.d,q=r.length,p=A.W(r).i("ax<1>"),o=new A.ax(r,new A.XU(),p).gF(0),n=new A.ax(r,new A.XV(),p).gF(0)
 if(q>23)return"ALERTA: Demasiados jugadores. M\xe1ximo 23."
-if(q<=18)s=3
+if(q<=15)s=3
+else if(q<=18)s=4
 else if(q<=22)s=5
 else s=6
-if(o<s)return"ALERTA 1a LINEA: Para "+q+" convocados, necesitas "+s+" primeras l\xedneas (tienes "+o+")."
+if(o<s)return"ALERTA 1a L\xcdNEA: Con "+q+" jugadores convocados, el reglamento exige tener al menos "+s+" primeras l\xedneas. Tienes "+o+"."
 r=this.b
 if(n<r)return"ALERTA FORMACI\xd3N: Faltan cupos 'F'. Tienes "+n+", necesitas "+r+"."
 return null},

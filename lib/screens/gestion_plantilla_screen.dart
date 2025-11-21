@@ -12,16 +12,15 @@ class GestionPlantillaScreen extends StatefulWidget {
 
 class _GestionPlantillaScreenState extends State<GestionPlantillaScreen> {
   final _nameController = TextEditingController();
-  bool _esPrimeraLinea = false;
-  bool _esFormacion = false;
-  bool _sortAsc = true; // Para ordenar
+  bool _esFormacion = false; // Solo queda Formación
+  bool _sortAsc = true;
 
   @override
   Widget build(BuildContext context) {
     final data = Provider.of<DataManager>(context);
     final tema = data.temaActual;
 
-    // Lógica de ordenación local
+    // Lógica de ordenación
     List<Jugador> listaOrdenada = List.from(data.plantilla);
     listaOrdenada.sort((a, b) => _sortAsc 
         ? a.nombre.compareTo(b.nombre) 
@@ -45,7 +44,7 @@ class _GestionPlantillaScreenState extends State<GestionPlantillaScreen> {
         padding: const EdgeInsets.all(16.0),
         child: Column(
           children: [
-            // FORMULARIO DE CREACIÓN (Sin Dorsal)
+            // FORMULARIO DE CREACIÓN
             Container(
               padding: const EdgeInsets.all(10),
               decoration: BoxDecoration(
@@ -67,15 +66,7 @@ class _GestionPlantillaScreenState extends State<GestionPlantillaScreen> {
                   const SizedBox(height: 10),
                   Row(
                     children: [
-                      FilterChip(
-                        label: const Text("1a LÍNEA"),
-                        selected: _esPrimeraLinea,
-                        onSelected: (v) => setState(() => _esPrimeraLinea = v),
-                        checkmarkColor: tema.bgPrincipal,
-                        selectedColor: tema.colorPositivo,
-                        labelStyle: TextStyle(color: _esPrimeraLinea ? tema.bgPrincipal : tema.textoPrincipal),
-                      ),
-                      const SizedBox(width: 10),
+                      // Solo Formación (F)
                       FilterChip(
                         label: const Text("FORMACIÓN (F)"),
                         selected: _esFormacion,
@@ -91,14 +82,13 @@ class _GestionPlantillaScreenState extends State<GestionPlantillaScreen> {
                           if (_nameController.text.isNotEmpty) {
                             final nuevo = Jugador(
                               nombre: _nameController.text,
-                              // Dorsal se pone a 0 por defecto, se edita en convocatoria
                               dorsal: 0, 
-                              esPrimeraLinea: _esPrimeraLinea,
+                              esPrimeraLinea: false, // Por defecto false, se pone en convocatoria
                               esFormacion: _esFormacion,
                             );
                             data.agregarJugador(nuevo);
                             _nameController.clear();
-                            setState(() { _esPrimeraLinea = false; _esFormacion = false; });
+                            setState(() { _esFormacion = false; });
                           }
                         },
                         child: Text("AÑADIR", style: TextStyle(color: tema.bgPrincipal)),
@@ -118,7 +108,10 @@ class _GestionPlantillaScreenState extends State<GestionPlantillaScreen> {
                   final j = listaOrdenada[index];
                   return ListTile(
                     title: Text(j.nombre, style: TextStyle(color: tema.textoPrincipal)),
-                    subtitle: Text(j.etiquetas, style: TextStyle(color: tema.colorPositivo, fontSize: 12)),
+                    // Mostramos si es F en el subtítulo
+                    subtitle: j.esFormacion 
+                        ? Text("Formación (F)", style: TextStyle(color: Colors.orangeAccent, fontSize: 12))
+                        : null,
                     trailing: Icon(Icons.edit, color: Colors.grey, size: 20),
                     onTap: () => _mostrarDialogoEdicion(context, j, data, tema),
                   );
@@ -133,7 +126,6 @@ class _GestionPlantillaScreenState extends State<GestionPlantillaScreen> {
 
   void _mostrarDialogoEdicion(BuildContext context, Jugador j, DataManager data, dynamic tema) {
     final nameCtrl = TextEditingController(text: j.nombre);
-    bool es1a = j.esPrimeraLinea;
     bool esF = j.esFormacion;
 
     showDialog(
@@ -155,14 +147,7 @@ class _GestionPlantillaScreenState extends State<GestionPlantillaScreen> {
                 Row(
                   children: [
                     FilterChip(
-                      label: const Text("1a"),
-                      selected: es1a,
-                      onSelected: (v) => setStateDlg(() => es1a = v),
-                      selectedColor: tema.colorPositivo,
-                    ),
-                    const SizedBox(width: 10),
-                    FilterChip(
-                      label: const Text("F"),
+                      label: const Text("Formación (F)"),
                       selected: esF,
                       onSelected: (v) => setStateDlg(() => esF = v),
                       selectedColor: Colors.orangeAccent,
@@ -174,7 +159,6 @@ class _GestionPlantillaScreenState extends State<GestionPlantillaScreen> {
             actions: [
               TextButton(
                 onPressed: () {
-                  // Borrar jugador
                   Navigator.pop(ctx);
                   data.eliminarJugador(j);
                 },
@@ -183,11 +167,9 @@ class _GestionPlantillaScreenState extends State<GestionPlantillaScreen> {
               ElevatedButton(
                 style: ElevatedButton.styleFrom(backgroundColor: tema.colorPositivo),
                 onPressed: () {
-                  // Guardar cambios
                   j.nombre = nameCtrl.text;
-                  j.esPrimeraLinea = es1a;
                   j.esFormacion = esF;
-                  data.actualizarJugador(); // Guardar en disco
+                  data.actualizarJugador();
                   Navigator.pop(ctx);
                 },
                 child: Text("GUARDAR", style: TextStyle(color: tema.bgPrincipal)),

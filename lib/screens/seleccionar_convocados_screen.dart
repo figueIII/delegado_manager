@@ -28,7 +28,7 @@ class _SeleccionarConvocadosScreenState extends State<SeleccionarConvocadosScree
     return Scaffold(
       backgroundColor: tema.bgPrincipal,
       appBar: AppBar(
-        title: Text('SELECCIONAR Y DORSALES', style: TextStyle(color: tema.colorPositivo, fontSize: 14)),
+        title: Text('CONVOCATORIA Y 1ª LÍNEA', style: TextStyle(color: tema.colorPositivo, fontSize: 14)),
         backgroundColor: tema.bgPrincipal,
         iconTheme: IconThemeData(color: tema.colorPositivo),
         actions: [
@@ -41,6 +41,11 @@ class _SeleccionarConvocadosScreenState extends State<SeleccionarConvocadosScree
       ),
       body: Column(
         children: [
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Text("Toca para convocar. Marca '1a' si es primera línea.", 
+                style: TextStyle(color: Colors.grey, fontSize: 12)),
+          ),
           Expanded(
             child: ListView.builder(
               itemCount: lista.length,
@@ -51,33 +56,69 @@ class _SeleccionarConvocadosScreenState extends State<SeleccionarConvocadosScree
                 return Container(
                   margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
                   decoration: BoxDecoration(
-                    color: esConvocado ? tema.colorPositivo.withOpacity(0.1) : Colors.transparent,
+                    color: esConvocado ? tema.colorPositivo.withOpacity(0.05) : Colors.transparent,
                     border: Border.all(color: esConvocado ? tema.colorPositivo : Colors.white10),
                   ),
                   child: ListTile(
-                    leading: esConvocado 
-                      ? GestureDetector(
-                          onTap: () => _editarDorsal(context, jugador, data, tema),
-                          child: CircleAvatar(
-                            backgroundColor: tema.colorPositivo,
-                            foregroundColor: tema.bgPrincipal,
-                            child: Text("${jugador.dorsal}", style: const TextStyle(fontWeight: FontWeight.bold)),
-                          ),
-                        )
-                      : const CircleAvatar(backgroundColor: Colors.transparent, child: Icon(Icons.check_box_outline_blank, color: Colors.grey)),
+                    // PARTE IZQUIERDA: DORSAL EDITABLE
+                    leading: GestureDetector(
+                      onTap: () => _editarDorsal(context, jugador, data, tema),
+                      child: CircleAvatar(
+                        backgroundColor: esConvocado ? tema.colorPositivo : Colors.grey[800],
+                        foregroundColor: esConvocado ? tema.bgPrincipal : Colors.white,
+                        child: Text(jugador.dorsal == 0 ? "#" : "${jugador.dorsal}", 
+                            style: const TextStyle(fontWeight: FontWeight.bold)),
+                      ),
+                    ),
                     
+                    // CENTRO: NOMBRE
                     title: Text(jugador.nombre, 
-                      style: TextStyle(color: esConvocado ? Colors.white : tema.textoPrincipal.withOpacity(0.5))),
+                      style: TextStyle(
+                        color: esConvocado ? Colors.white : tema.textoPrincipal.withOpacity(0.5),
+                        fontWeight: esConvocado ? FontWeight.bold : FontWeight.normal
+                      )
+                    ),
                     
-                    trailing: esConvocado ? Icon(Icons.check, color: tema.colorPositivo) : null,
+                    // PARTE DERECHA: TOGGLE 1a LÍNEA
+                    trailing: SizedBox(
+                      width: 80, // Espacio para el botón
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          // Botón 1a Línea
+                          GestureDetector(
+                            onTap: () {
+                              // Cambiamos el estado de 1a linea directamente
+                              jugador.esPrimeraLinea = !jugador.esPrimeraLinea;
+                              data.actualizarJugador(); // Guardamos cambios
+                            },
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                              decoration: BoxDecoration(
+                                color: jugador.esPrimeraLinea ? tema.colorPositivo : Colors.transparent,
+                                border: Border.all(color: jugador.esPrimeraLinea ? tema.colorPositivo : Colors.grey),
+                                borderRadius: BorderRadius.circular(4)
+                              ),
+                              child: Text("1a", 
+                                style: TextStyle(
+                                  color: jugador.esPrimeraLinea ? tema.bgPrincipal : Colors.grey, 
+                                  fontWeight: FontWeight.bold, fontSize: 12
+                                )
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
                     
+                    // AL TOCAR LA FILA: CONVOCAR
                     onTap: () => data.toggleConvocado(jugador),
                   ),
                 );
               },
             ),
           ),
-          // ... (Zona inferior igual que antes)
+          // ZONA INFERIOR IGUAL
           Container(
             padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
@@ -111,14 +152,13 @@ class _SeleccionarConvocadosScreenState extends State<SeleccionarConvocadosScree
                                const SnackBar(content: Text('Selecciona al menos un jugador')));
                              return;
                           }
-                          // Validar reglas
                           String? alerta = data.validarReglasConvocatoria();
                           if (alerta != null) {
                             showDialog(
                               context: context,
                               builder: (ctx) => AlertDialog(
                                 backgroundColor: Colors.red[50],
-                                title: Row(children: [Icon(Icons.warning, color: Colors.red), SizedBox(width: 10), Text("ALERTA")]),
+                                title: Row(children: [Icon(Icons.warning, color: Colors.red), SizedBox(width: 10), Text("ALERTA REGLAMENTO")]),
                                 content: Text(alerta),
                                 actions: [
                                   TextButton(child: const Text("Corregir"), onPressed: () => Navigator.pop(ctx)),

@@ -45,7 +45,7 @@ class PartidoScreen extends StatelessWidget {
       ),
       body: Column(
         children: [
-          // --- MARCADOR PRINCIPAL (CUADRADO) ---
+          // --- MARCADOR PRINCIPAL ---
           Container(
             margin: const EdgeInsets.all(16),
             padding: const EdgeInsets.all(12),
@@ -88,7 +88,6 @@ class PartidoScreen extends StatelessWidget {
                         onChange: (v) => data.cambiarPuntos(true, v)
                       ),
                     ),
-                    
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 8.0),
                       child: InkWell(
@@ -112,7 +111,6 @@ class PartidoScreen extends StatelessWidget {
                         ),
                       ),
                     ),
-
                     Expanded(
                       child: _ThemeScore(
                         label: "RIVAL", 
@@ -128,7 +126,7 @@ class PartidoScreen extends StatelessWidget {
             ),
           ),
           
-          // --- PANELES DE JUGADORES (SIN TIEMPO) ---
+          // --- PANELES DE JUGADORES ---
           Expanded(
             child: Row(
               children: [
@@ -189,7 +187,9 @@ class PartidoScreen extends StatelessWidget {
                     _ThemeTextButton("RESET CRONO", tema.textoPrincipal, 
                        () => _confirmarAccion(context, "REINICIAR CRONO", "¿Resetear tiempo de partido?", data.reiniciarTiempoPartido, tema)),
                     const Text("|", style: TextStyle(color: Colors.white10)),
-                    // HE QUITADO EL BOTÓN DE RESET JUGADORES DE AQUÍ TAMBIÉN
+                    _ThemeTextButton("RESET TIEMPOS JUGADORES", tema.textoPrincipal, 
+                       () => _confirmarAccion(context, "REINICIAR TIEMPOS JUGADORES", "¿Resetear tiempo de jugadores?", data.reiniciarTiemposJugadores, tema)),
+                    const Text("|", style: TextStyle(color: Colors.white10)),
                     _ThemeTextButton("FINALIZAR", tema.colorNegativo, 
                        () => _confirmarSalida(context, data)),
                   ],
@@ -228,7 +228,7 @@ class PartidoScreen extends StatelessWidget {
                       trailing: isSelected ? Icon(Icons.check, color: t.colorPositivo) : null,
                       onTap: () {
                         data.cambiarTema(t);
-                        Navigator.pop(ctx); 
+                        Navigator.pop(ctx);
                       },
                     );
                   },
@@ -241,7 +241,7 @@ class PartidoScreen extends StatelessWidget {
     );
   }
 
-  // --- DIÁLOGOS ---
+  // --- DIÁLOGOS DINÁMICOS ---
   void _confirmarAccion(BuildContext context, String titulo, String mensaje, VoidCallback accion, GameTheme tema) {
     showDialog(
       context: context,
@@ -289,7 +289,7 @@ class PartidoScreen extends StatelessWidget {
   }
 }
 
-// --- WIDGETS AUXILIARES ---
+// --- WIDGETS AUXILIARES DINÁMICOS ---
 
 class _ThemeScore extends StatelessWidget {
   final String label;
@@ -391,13 +391,11 @@ class _ThemePanel extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: alineacion == CrossAxisAlignment.start 
                     ? [
-                        // IZQUIERDA: Nombre y Dorsal
                         Flexible(child: Text("#${j.dorsal} ${j.nombre}", overflow: TextOverflow.ellipsis, style: TextStyle(color: textColor.withOpacity(0.9), fontWeight: FontWeight.w300))),
-                        Text(j.tiempoFormateado, style: TextStyle(color: color, fontFamily: 'Courier', fontSize: 18, fontWeight: FontWeight.bold)),
+                        // TIEMPO ELIMINADO AQUÍ
                       ]
                     : [
-                        // DERECHA: Tiempo y Nombre
-                        Text(j.tiempoFormateado, style: TextStyle(color: color, fontFamily: 'Courier', fontSize: 18, fontWeight: FontWeight.bold)),
+                        // TIEMPO ELIMINADO AQUÍ
                         Flexible(child: Text("${j.nombre} #${j.dorsal}", overflow: TextOverflow.ellipsis, style: TextStyle(color: textColor.withOpacity(0.6), fontWeight: FontWeight.w300))),
                       ],
                 ),

@@ -1,0 +1,23 @@
+name: gestor_equipo_rugby
+description: Aplicación para gestión de partidos y tiempos de juego.
+publish_to: 'none'
+version: 1.0.0+1
+
+environment:
+  sdk: '>=3.0.0 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+  # Para gestionar el estado de la app (variables globales)
+  provider: ^6.0.5
+  # El reemplazo de TinyDB para guardar datos
+  shared_preferences: ^2.2.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^2.0.0
+
+flutter:
+  uses-material-design: true
